@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="css/style.css" rel="stylesheet" type="text/css">
+  <meta charset="utf-8">
+  <title>2048</title>
+</head>
+<body>
+  <div class="heading">
+    <h1 class="title">2048</h1>
+    <div class="scores-container">
+      <p class = "score">
+        Score
+      </p>
+      <div class="score-container">0</div>
+    </div>
+  </div>
+  <div class = "above-game">
+    <p class="intro">
+      Join the numbers and get to the
+      <strong>2048 tile!</strong>
+    </p>
+    <a href = "javascript:newGame()" class="restart-button">New Game</a>
+  </div>
+  <div class = "field">
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "cell"></div>
+    <div class = "game-over">
+      <p>
+        Game Over
+      </p>
+      <a href = "javascript:newGame()" class="try-again">Try Again</a>
+    </div>
+    <div class = "win">
+      <p>
+        WIN!
+      </p>
+      <a href = "javascript:hideWin()" class="try-again">Continue</a>
+      <a href = "javascript:newGame()" class="try-again">Try Again</a>
+    </div>
+  </div>
+  <script src = "js/jquery-3.2.1.min.js"></script>
+  <script src = "js/gameField.js"></script>
+  <script src = "js/cell.js"></script>
+  <script src = "js/render.js"></script>
+  <script src = "js/supportFunctions.js"></script>
+  <script src = "js/gameFunctions.js"></script>
+  <script src = "js/game.js"></script>
+</body>
+</html>
