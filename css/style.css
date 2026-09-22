@@ -13,6 +13,19 @@ body {
   font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
   font-size: 18px;
   overscroll-behavior: none;
+  overflow-x: hidden;
+}
+
+.game-container {
+  width: 500px;
+  margin: 0 auto;
+  transform-origin: top center;
+}
+
+@media (max-width: 520px) {
+  .game-container {
+    transform: scale(calc((100vw - 20px) / 500));
+  }
 }
 
 .heading {
