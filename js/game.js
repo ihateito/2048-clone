@@ -1,8 +1,8 @@
 "use strict";
 
-const GRID_SIZE = 4;
-const field = new gameField(GRID_SIZE);
-let game;
+const size = 4;
+const field = new gameField(size);
+let game = true;
 let win = false;
 
 const KEY_ACTIONS = {
@@ -13,6 +13,7 @@ const KEY_ACTIONS = {
 };
 
 function handleMove(moveFn) {
+  if (typeof moveFn !== "function") return;
   if (!moveFn()) return;
 
   updateRenderField();
@@ -26,43 +27,29 @@ function handleMove(moveFn) {
 $(document).ready(() => {
   newGame();
 
-  let touchStartX = 0;
-  let touchStartY = 0;
+  let startX = 0;
+  let startY = 0;
 
-  window.addEventListener(
+  document.addEventListener(
     "touchstart",
     (e) => {
-      if (!e.target.closest(".field")) return;
-      touchStartX = e.touches[0].screenX;
-      touchStartY = e.touches[0].screenY;
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
     },
     { passive: true }
   );
 
-  window.addEventListener(
-    "touchmove",
-    (e) => {
-      if (e.target.closest(".field")) {
-        e.preventDefault();
-      }
-    },
-    { passive: false }
-  );
-
-  window.addEventListener(
+  document.addEventListener(
     "touchend",
     (e) => {
-      if (!e.target.closest(".field")) return;
-
-      const touchEndX = e.changedTouches[0].screenX;
-      const touchEndY = e.changedTouches[0].screenY;
-
-      const dx = touchEndX - touchStartX;
-      const dy = touchEndY - touchStartY;
+      const touch = e.changedTouches[0];
+      const dx = touch.clientX - startX;
+      const dy = touch.clientY - startY;
       const absDx = Math.abs(dx);
       const absDy = Math.abs(dy);
 
-      if (Math.max(absDx, absDy) < 30) return;
+      if (Math.max(absDx, absDy) < 20) return;
 
       if (absDx > absDy) {
         handleMove(dx > 0 ? KEY_ACTIONS[39] : KEY_ACTIONS[37]);
