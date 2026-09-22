@@ -1,16 +1,9 @@
 "use strict";
 
-const size = 4;
-const field = new gameField(size);
-let game = true;
-let win = false;
-
-const KEY_ACTIONS = {
-  37: () => moveLeft(),
-  38: () => moveUp(),
-  39: () => moveRight(),
-  40: () => moveDown()
-};
+var size = 4;
+var field = new gameField(size);
+var game;
+var win = false;
 
 function handleMove(moveFn) {
   if (typeof moveFn !== "function") return;
@@ -24,47 +17,57 @@ function handleMove(moveFn) {
   }
 }
 
-$(document).ready(() => {
+$(document).ready(function() {
   newGame();
 
-  let startX = 0;
-  let startY = 0;
+  var startX = 0;
+  var startY = 0;
 
-  document.addEventListener(
-    "touchstart",
-    (e) => {
-      const touch = e.touches[0];
-      startX = touch.clientX;
-      startY = touch.clientY;
-    },
-    { passive: true }
-  );
+  var fieldEl = document.querySelector(".field");
+  if (fieldEl) {
+    fieldEl.addEventListener("touchstart", function(e) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, { passive: true });
 
-  document.addEventListener(
-    "touchend",
-    (e) => {
-      const touch = e.changedTouches[0];
-      const dx = touch.clientX - startX;
-      const dy = touch.clientY - startY;
-      const absDx = Math.abs(dx);
-      const absDy = Math.abs(dy);
+    fieldEl.addEventListener("touchmove", function(e) {
+      e.preventDefault();
+    }, { passive: false });
 
-      if (Math.max(absDx, absDy) < 20) return;
+    fieldEl.addEventListener("touchend", function(e) {
+      var dx = e.changedTouches[0].clientX - startX;
+      var dy = e.changedTouches[0].clientY - startY;
+      var absDx = Math.abs(dx);
+      var absDy = Math.abs(dy);
+
+      if (Math.max(absDx, absDy) < 25) return;
 
       if (absDx > absDy) {
-        handleMove(dx > 0 ? KEY_ACTIONS[39] : KEY_ACTIONS[37]);
+        handleMove(dx > 0 ? moveRight : moveLeft);
       } else {
-        handleMove(dy > 0 ? KEY_ACTIONS[40] : KEY_ACTIONS[38]);
+        handleMove(dy > 0 ? moveDown : moveUp);
       }
-    },
-    { passive: true }
-  );
+    }, { passive: true });
+  }
 });
 
-$(document).keydown((event) => {
-  const action = KEY_ACTIONS[event.keyCode];
-  if (action) {
-    event.preventDefault();
-    handleMove(action);
+$(document).keydown(function(event) {
+  switch (event.keyCode) {
+    case 37:
+      event.preventDefault();
+      handleMove(moveLeft);
+      break;
+    case 38:
+      event.preventDefault();
+      handleMove(moveUp);
+      break;
+    case 39:
+      event.preventDefault();
+      handleMove(moveRight);
+      break;
+    case 40:
+      event.preventDefault();
+      handleMove(moveDown);
+      break;
   }
 });
