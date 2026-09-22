@@ -1,115 +1,113 @@
 "use strict";
 
-function gameField(size) {
-  this.field = {}
-  this.trash = {}
-  this.score = 0;
-}
-
-gameField.prototype.addCell = function() {
-  if (Object.keys(this.field).length >= size * size)
-    return;
-  var i = getRandomInt(1, size);
-  var j = getRandomInt(1, size);
-  while (this.field["" + i + j]) {
-      i = getRandomInt(1, size);
-      j = getRandomInt(1, size);
+class gameField {
+  constructor(size) {
+    this.size = size;
+    this.field = {};
+    this.trash = {};
+    this.score = 0;
   }
-  this.field["" + i + j] = new cell(i, j, generateValue());
-  return this.field["" + i + j];
-};
-//Logic, don't touch
 
-gameField.prototype.moveAxisX = function(fromJ, toJ, step) {
-  var shift = false;
-  for (var i = 1; i <= size; i++) {
-    var idFirstEmptyCell = undefined;
-    for (var j = fromJ; j != toJ + step; j += step) {
-      var cell = "" + i + j;
-      if (cell in this.field) {
-        if (idFirstEmptyCell){
-          var emptyCell = "" + i + idFirstEmptyCell;
-          this.field[emptyCell] = this.field[cell];
-          this.field[emptyCell].j = idFirstEmptyCell;
-          delete this.field[cell];
-          idFirstEmptyCell += step;
-          if (!shift)
+  addCell() {
+    if (Object.keys(this.field).length >= this.size * this.size) return null;
+
+    let i = getRandomInt(1, this.size);
+    let j = getRandomInt(1, this.size);
+    while (this.field[`${i}${j}`]) {
+      i = getRandomInt(1, this.size);
+      j = getRandomInt(1, this.size);
+    }
+
+    const newCell = new Cell(i, j, generateValue());
+    this.field[`${i}${j}`] = newCell;
+    return newCell;
+  }
+
+  moveAxisX(fromJ, toJ, step) {
+    let shift = false;
+    for (let i = 1; i <= this.size; i++) {
+      let idFirstEmptyCell;
+      for (let j = fromJ; j !== toJ + step; j += step) {
+        const cellKey = `${i}${j}`;
+        if (cellKey in this.field) {
+          if (idFirstEmptyCell !== undefined) {
+            const emptyCellKey = `${i}${idFirstEmptyCell}`;
+            this.field[emptyCellKey] = this.field[cellKey];
+            this.field[emptyCellKey].j = idFirstEmptyCell;
+            delete this.field[cellKey];
+            idFirstEmptyCell += step;
             shift = true;
-        }
-      }
-      else
-        if (!idFirstEmptyCell)
+          }
+        } else if (idFirstEmptyCell === undefined) {
           idFirstEmptyCell = j;
-    }
-  }
-  return shift;
-};
-
-gameField.prototype.moveAxisY = function(fromI, toI, step) {
-  var shift = false;
-  for (var j = 1; j <= size; j++) {
-    var idFirstEmptyCell = undefined;
-    for (var i = fromI; i != toI + step; i += step) {
-      var cell = "" + i + j;
-      if (cell in this.field) {
-        if (idFirstEmptyCell){
-          var emptyCell = "" + idFirstEmptyCell + j;
-          this.field[emptyCell] = this.field[cell];
-          this.field[emptyCell].i = idFirstEmptyCell;
-          delete this.field[cell];
-          idFirstEmptyCell += step;
-          if (!shift)
-            shift = true;
         }
       }
-      else
-        if (!idFirstEmptyCell)
-          idFirstEmptyCell = i;
     }
+    return shift;
   }
-  return shift;
-};
 
-
-
-gameField.prototype.sumCellAxisX = function(fromJ, toJ, step) {
-  var shift = false;
-  for (var i = 1; i <= size; i++)
-    for (var j = fromJ; j != toJ + step; j += step){
-      var cell = "" + i + j;
-      var prevCell = "" + i + (j + step);
-      if (cell in this.field && prevCell in this.field)
-        if (this.field[cell].value == this.field[prevCell].value) {
-          this.field[prevCell].value *= 2;
-          this.score += this.field[prevCell].value;
-          this.trash[Object.keys(this.trash).length] = this.field[cell].div;
-          delete this.field[cell];
-          j += step;
-          if (!shift)
+  moveAxisY(fromI, toI, step) {
+    let shift = false;
+    for (let j = 1; j <= this.size; j++) {
+      let idFirstEmptyCell;
+      for (let i = fromI; i !== toI + step; i += step) {
+        const cellKey = `${i}${j}`;
+        if (cellKey in this.field) {
+          if (idFirstEmptyCell !== undefined) {
+            const emptyCellKey = `${idFirstEmptyCell}${j}`;
+            this.field[emptyCellKey] = this.field[cellKey];
+            this.field[emptyCellKey].i = idFirstEmptyCell;
+            delete this.field[cellKey];
+            idFirstEmptyCell += step;
             shift = true;
+          }
+        } else if (idFirstEmptyCell === undefined) {
+          idFirstEmptyCell = i;
         }
+      }
     }
-  return shift;
-};
+    return shift;
+  }
 
-
-
-gameField.prototype.sumCellAxisY = function(fromI, toI, step) {
-  var shift = false;
-  for (var j = 1; j <= size; j++)
-    for (var i = fromI; i != toI + step; i += step){
-      var cell = "" + i + j;
-      var prevCell = "" + (i + step) + j;
-      if (cell in this.field && prevCell in this.field)
-        if (this.field[cell].value == this.field[prevCell].value) {
-          this.field[prevCell].value *= 2;
-          this.score += this.field[prevCell].value;
-          this.trash[Object.keys(this.trash).length] = this.field[cell].div;
-          delete this.field[cell];
-          i += step;
-          if (!shift)
+  sumCellAxisX(fromJ, toJ, step) {
+    let shift = false;
+    for (let i = 1; i <= this.size; i++) {
+      for (let j = fromJ; j !== toJ + step; j += step) {
+        const cellKey = `${i}${j}`;
+        const prevCellKey = `${i}${j + step}`;
+        if (cellKey in this.field && prevCellKey in this.field) {
+          if (this.field[cellKey].value === this.field[prevCellKey].value) {
+            this.field[prevCellKey].value *= 2;
+            this.score += this.field[prevCellKey].value;
+            this.trash[Object.keys(this.trash).length] = this.field[cellKey].div;
+            delete this.field[cellKey];
+            j += step;
             shift = true;
+          }
         }
+      }
     }
-  return shift;
-};
+    return shift;
+  }
+
+  sumCellAxisY(fromI, toI, step) {
+    let shift = false;
+    for (let j = 1; j <= this.size; j++) {
+      for (let i = fromI; i !== toI + step; i += step) {
+        const cellKey = `${i}${j}`;
+        const prevCellKey = `${i + step}${j}`;
+        if (cellKey in this.field && prevCellKey in this.field) {
+          if (this.field[cellKey].value === this.field[prevCellKey].value) {
+            this.field[prevCellKey].value *= 2;
+            this.score += this.field[prevCellKey].value;
+            this.trash[Object.keys(this.trash).length] = this.field[cellKey].div;
+            delete this.field[cellKey];
+            i += step;
+            shift = true;
+          }
+        }
+      }
+    }
+    return shift;
+  }
+}
