@@ -6,24 +6,38 @@ function newGame() {
   updateScore(field.score);
   clearField();
   firstGen();
-	for (var key in field.field)
-		renderCell(field.field[key]);
-	setTimeout(function() { for (var key in field.field) showAnimation(field.field[key]); }, 50);
+
+  Object.values(field.field).forEach(renderCell);
+  setTimeout(() => {
+    Object.values(field.field).forEach(showAnimation);
+  }, 50);
 }
-//Object.keys(menu).length
+
 function updateField() {
-		setTimeout(function() { updateCells(field.field); }, 100);
-		setTimeout(function() { updateCellsValue(field.field); updateScore(field.score);}, 200);
+  setTimeout(() => updateCells(field.field), 100);
+  setTimeout(() => {
+    updateCellsValue(field.field);
+    updateScore(field.score);
+  }, 200);
 }
 
 function removeCells() {
-		setTimeout(function() { for (var key in field.trash) field.trash[key].remove(); delete field.trash[key]; }, 200);
+  setTimeout(() => {
+    for (const key of Object.keys(field.trash)) {
+      field.trash[key].remove();
+      delete field.trash[key];
+    }
+  }, 200);
 }
 
 function addNewCell() {
-	var tempCell;
-	setTimeout(function() { tempCell = renderCell(field.addCell()); }, 220);
-	setTimeout(function() { showAnimation(tempCell); }, 270);
+  let tempCell;
+  setTimeout(() => {
+    tempCell = renderCell(field.addCell());
+  }, 220);
+  setTimeout(() => {
+    if (tempCell) showAnimation(tempCell);
+  }, 270);
 }
 
 function updateRenderField() {
@@ -32,63 +46,50 @@ function updateRenderField() {
   addNewCell();
 }
 
-function moveUp() {
-	var shift = false;
-	shift += field.moveAxisY(1, size, 1);
-	shift += field.sumCellAxisY(1, size, 1);
-	shift += field.moveAxisY(1, size, 1);
-	return shift;
+function moveAxis(step, isVertical) {
+  const [start, end] = step > 0 ? [1, size] : [size, 1];
+  const moveFn = isVertical ? field.moveAxisY : field.moveAxisX;
+  const sumFn = isVertical ? field.sumCellAxisY : field.sumCellAxisX;
+
+  const shifted1 = moveFn.call(field, start, end, step);
+  const merged = sumFn.call(field, start, end, step);
+  const shifted2 = moveFn.call(field, start, end, step);
+
+  return Boolean(shifted1 || merged || shifted2);
 }
 
-function moveDown() {
-	var shift = false;
-	shift += field.moveAxisY(size, 1, -1);
-	shift += field.sumCellAxisY(size, 1, -1);
-	shift += field.moveAxisY(size, 1, -1);
-	return shift;
-}
-
-function moveLeft() {
-	var shift = false;
-	shift += field.moveAxisX(1, size, 1);
-	shift += field.sumCellAxisX(1, size, 1);
-	shift += field.moveAxisX(1, size, 1);
-	return shift;
-}
-
-function moveRight() {
-	var shift = false;
-	shift += field.moveAxisX(size, 1, -1);
-	shift += field.sumCellAxisX(size, 1, -1);
-	shift += field.moveAxisX(size, 1, -1);
-	return shift;
-}
+const moveUp = () => moveAxis(1, true);
+const moveDown = () => moveAxis(-1, true);
+const moveLeft = () => moveAxis(1, false);
+const moveRight = () => moveAxis(-1, false);
 
 function firstGen() {
-  var numberTiles = getRandomInt(2, 4);
-  for (var k = 1; k <= numberTiles; k++)
+  const numberTiles = getRandomInt(2, 4);
+  for (let k = 0; k < numberTiles; k++) {
     field.addCell();
-};
+  }
+}
 
 function gameOver() {
-  if (Object.keys(field.field).length == size * size && !canMoveY(field.field) && !canMoveX(field.field)) {
+  const isFull = Object.keys(field.field).length >= size * size;
+  if (isFull && !canMoveY(field.field) && !canMoveX(field.field)) {
     renderGameOver();
   }
 }
 
 function isWin() {
-  for (var key in field.field)
-    if (field.field[key].value == 2048) {
-      renderWin();
-      win = true;
-    }
+  const hasWon = Object.values(field.field).some(cell => cell.value === 2048);
+  if (hasWon) {
+    renderWin();
+    win = true;
+  }
 }
 
 function clearField() {
   clearValueCell();
-  for (var key in field.field) {
+  for (const key of Object.keys(field.field)) {
     delete field.field[key];
   }
   hideGameOver();
   hideWin();
-};
+}
