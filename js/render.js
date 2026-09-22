@@ -1,70 +1,82 @@
-"use strict"
-//91s 45 words 95s speak
+"use strict";
 
+const $field = $(".field");
+const $scoreContainer = $(".score-container");
+const $gameOver = $(".game-over");
+const $win = $(".win");
 
 function renderCell(cell) {
-  if (!cell)
-    return;
-  cell.div = $('<div class = "value-cell"></div>');
-  cell.div.text(cell.value);
-  cell.div.css("background-color",getNumberCellBgColor(cell.value));
-  cell.div.css("top", getPosTop(cell.i - 1, cell.j - 1) + 25);
-  cell.div.css("left", getPosLeft(cell.i - 1, cell.j - 1) + 25);
-  $(".field").append(cell.div);
+  if (!cell) return null;
+
+  cell.div = $("<div>", { class: "value-cell", text: cell.value }).css({
+    "background-color": getNumberCellBgColor(cell.value),
+    top: getPosTop(cell.i - 1, cell.j - 1) + 25,
+    left: getPosLeft(cell.i - 1, cell.j - 1) + 25
+  });
+
+  $field.append(cell.div);
   return cell;
 }
 
 function showAnimation(cell) {
-  if (!cell)
-    return;
-  cell.div.css("top", getPosTop(cell.i - 1, cell.j - 1));
-  cell.div.css("left", getPosLeft(cell.i - 1, cell.j - 1));
-  cell.div.css("width", 100);
-  cell.div.css("height", 100);
-  cell.div.css("font-size", getNumberCellFontSize(cell.value));
-  cell.div.css("line-height", 100+"px");
+  if (!cell?.div) return;
+
+  cell.div.css({
+    top: getPosTop(cell.i - 1, cell.j - 1),
+    left: getPosLeft(cell.i - 1, cell.j - 1),
+    width: 100,
+    height: 100,
+    "font-size": getNumberCellFontSize(cell.value),
+    "line-height": "100px"
+  });
 }
 
-
-function updateCells(field) {
-  for (var key in field) {
-    if (!field[key].div) {
-      field[key].div = $('<div class = "value-cell"></div>');
-      $(".field").append(field[key].div);
+function updateCells(fieldObj) {
+  Object.values(fieldObj).forEach((item) => {
+    if (!item.div) {
+      item.div = $("<div>", { class: "value-cell" });
+      $field.append(item.div);
     }
 
-    field[key].div.css("top", getPosTop(field[key].i - 1, field[key].j - 1));
-    field[key].div.css("left", getPosLeft(field[key].i - 1, field[key].j - 1));
-  }
+    item.div.css({
+      top: getPosTop(item.i - 1, item.j - 1),
+      left: getPosLeft(item.i - 1, item.j - 1)
+    });
+  });
 }
 
-function updateCellsValue(field) {
-  for (var key in field) {
-    field[key].div.css("color", getNumberCellFontColor(field[key].value));
-    field[key].div.css("background-color",getNumberCellBgColor(field[key].value));
-    field[key].div.css("font-size", getNumberCellFontSize(field[key].value));
-    field[key].div.text(field[key].value);
-  }
+function updateCellsValue(fieldObj) {
+  Object.values(fieldObj).forEach((item) => {
+    if (!item.div) return;
+
+    item.div
+      .text(item.value)
+      .css({
+        color: getNumberCellFontColor(item.value),
+        "background-color": getNumberCellBgColor(item.value),
+        "font-size": getNumberCellFontSize(item.value)
+      });
+  });
 }
 
 function updateScore(score) {
-  $(".score-container").text(score);
+  $scoreContainer.text(score);
 }
 
 function renderGameOver() {
-  $(".game-over").css("visibility", "visible");
+  $gameOver.css("visibility", "visible");
 }
 
 function renderWin() {
-  $(".win").css("visibility", "visible");
+  $win.css("visibility", "visible");
 }
 
 function hideGameOver() {
-  $(".game-over").css("visibility", "hidden");
+  $gameOver.css("visibility", "hidden");
 }
 
 function hideWin() {
-  $(".win").css("visibility", "hidden");
+  $win.css("visibility", "hidden");
 }
 
 function clearValueCell() {
