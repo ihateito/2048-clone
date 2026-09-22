@@ -12,6 +12,7 @@ body {
   color: #776e65;
   font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
   font-size: 18px;
+  overscroll-behavior: none;
 }
 
 .heading {
@@ -97,6 +98,9 @@ body {
   background-color: #bbada0;
   border-radius: 10px;
   position: relative;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .cell {
@@ -121,6 +125,8 @@ body {
   font-weight: bold;
   position: absolute;
   user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
 }
 
 .game-over,
