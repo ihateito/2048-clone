@@ -1,7 +1,7 @@
 "use strict";
 
 class gameField {
-  constructor(size) {
+  constructor(size = 4) {
     this.size = size;
     this.field = {};
     this.trash = {};
@@ -18,7 +18,8 @@ class gameField {
       j = getRandomInt(1, this.size);
     }
 
-    const newCell = new Cell(i, j, generateValue());
+    const value = generateValue();
+    const newCell = typeof Cell === "function" ? new Cell(i, j, value) : new cell(i, j, value);
     this.field[`${i}${j}`] = newCell;
     return newCell;
   }
