@@ -1,52 +1,36 @@
 "use strict";
-var size = 4;
-var field = new gameField(size);
-var game;
-var win = false;
 
-$(document).ready(function(){
+const GRID_SIZE = 4;
+const field = new gameField(GRID_SIZE);
+let game;
+let win = false;
+
+const KEY_ACTIONS = {
+  37: () => moveLeft(),
+  38: () => moveUp(),
+  39: () => moveRight(),
+  40: () => moveDown()
+};
+
+function handleMove(moveFn) {
+  if (!moveFn()) return;
+
+  updateRenderField();
+  setTimeout(gameOver, 300);
+
+  if (!win) {
+    setTimeout(isWin, 310);
+  }
+}
+
+$(document).ready(() => {
   newGame();
 });
 
-$(document).keydown(function (event) {
-  switch (event.keyCode) {
-		case 37:
-		  	event.preventDefault();
-	      if(moveLeft()) {
-					updateRenderField()
-					setTimeout("gameOver()", 300);
-          if (!win)
-            setTimeout("isWin()", 310);
-				}
-	      break;
-	    case 38:
-		  	event.preventDefault();
-	      if(moveUp()){
-					updateRenderField();
-					setTimeout("gameOver()", 300);
-          if (!win)
-            setTimeout("isWin()", 310);
-				}
-	      break;
-	    case 39:
-		  	event.preventDefault();
-	      if(moveRight()){
-					updateRenderField();
-					setTimeout("gameOver()", 300);
-          if (!win)
-            setTimeout("isWin()", 310);
-				}
-	      break;
-			case 40:
-		    event.preventDefault();
-				if(moveDown()){
-					updateRenderField();
-					setTimeout("gameOver()", 300);
-          if (!win)
-            setTimeout("isWin()", 310);
-				}
-	      break;
-	    default:
-	      return;
+$(document).keydown((event) => {
+  const action = KEY_ACTIONS[event.keyCode];
+  if (action) {
+    event.preventDefault();
+    handleMove(action);
   }
 });
