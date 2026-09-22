@@ -34,3 +34,28 @@ $(document).keydown((event) => {
     handleMove(action);
   }
 });
+
+let touchStartX = 0;
+let touchStartY = 0;
+
+$(document).on("touchstart", (e) => {
+  const touch = e.originalEvent.touches[0];
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+});
+
+$(document).on("touchend", (e) => {
+  const touch = e.originalEvent.changedTouches[0];
+  const dx = touch.clientX - touchStartX;
+  const dy = touch.clientY - touchStartY;
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  if (Math.max(absDx, absDy) < 30) return;
+
+  if (absDx > absDy) {
+    handleMove(dx > 0 ? KEY_ACTIONS[39] : KEY_ACTIONS[37]);
+  } else {
+    handleMove(dy > 0 ? KEY_ACTIONS[40] : KEY_ACTIONS[38]);
+  }
+});
