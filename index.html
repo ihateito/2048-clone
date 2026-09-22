@@ -2,53 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>2048</title>
   <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-  <div class="heading">
-    <h1 class="title">2048</h1>
-    <div class="scores-container">
-      <p class="score">Score</p>
-      <div class="score-container">0</div>
-    </div>
-  </div>
-
-  <div class="above-game">
-    <p class="intro">
-      Join the numbers and get to the <strong>2048 tile!</strong>
-    </p>
-    <a href="#" class="restart-button" onclick="newGame(); return false;">New Game</a>
-  </div>
-
-  <div class="field">
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-
-    <div class="game-over">
-      <p>Game Over</p>
-      <a href="#" class="try-again" onclick="newGame(); return false;">Try Again</a>
+  <div class="game-container">
+    <div class="heading">
+      <h1 class="title">2048</h1>
+      <div class="scores-container">
+        <p class="score">Score</p>
+        <div class="score-container">0</div>
+      </div>
     </div>
 
-    <div class="win">
-      <p>WIN!</p>
-      <a href="#" class="try-again" onclick="hideWin(); return false;">Continue</a>
-      <a href="#" class="try-again" onclick="newGame(); return false;">Try Again</a>
+    <div class="above-game">
+      <p class="intro">
+        Join the numbers and get to the <strong>2048 tile!</strong>
+      </p>
+      <a href="#" class="restart-button" onclick="newGame(); return false;">New Game</a>
+    </div>
+
+    <div class="field">
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+
+      <div class="game-over">
+        <p>Game Over</p>
+        <a href="#" class="try-again" onclick="newGame(); return false;">Try Again</a>
+      </div>
+
+      <div class="win">
+        <p>WIN!</p>
+        <a href="#" class="try-again" onclick="hideWin(); return false;">Continue</a>
+        <a href="#" class="try-again" onclick="newGame(); return false;">Try Again</a>
+      </div>
     </div>
   </div>
 
