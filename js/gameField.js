@@ -9,18 +9,21 @@ class gameField {
   }
 
   addCell() {
-    if (Object.keys(this.field).length >= this.size * this.size) return null;
-
-    let i = getRandomInt(1, this.size);
-    let j = getRandomInt(1, this.size);
-    while (this.field[`${i}${j}`]) {
-      i = getRandomInt(1, this.size);
-      j = getRandomInt(1, this.size);
+    const empty = [];
+    for (let i = 1; i <= this.size; i++) {
+      for (let j = 1; j <= this.size; j++) {
+        if (!this.field[`${i}${j}`]) {
+          empty.push({ i, j });
+        }
+      }
     }
 
+    if (!empty.length) return null;
+
+    const spot = empty[Math.floor(Math.random() * empty.length)];
     const value = generateValue();
-    const newCell = typeof Cell === "function" ? new Cell(i, j, value) : new cell(i, j, value);
-    this.field[`${i}${j}`] = newCell;
+    const newCell = typeof Cell === "function" ? new Cell(spot.i, spot.j, value) : new cell(spot.i, spot.j, value);
+    this.field[`${spot.i}${spot.j}`] = newCell;
     return newCell;
   }
 
